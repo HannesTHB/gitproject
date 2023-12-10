@@ -1,0 +1,105 @@
+package tictactoe;
+
+import java.util.Scanner;
+
+/**
+ * Quellcode zum Spiel Tic-Tac-Toe.
+ * Erstellt ein Spielfeld in Zeilen und Spalten (3x3).
+ * Spieler X und Spieler O sind abwechselnd dran, Zeile und Spalte per Nummer 1-3 anzugeben.
+ * Spieler X startet immer.
+
+ * @author h.hampel@th-brandenburg.de
+ */
+
+ * Kommentar-Test für GitHub
+
+public class tictactoe {
+  // main-Methode
+  public static void main(String[] args) {
+    char[][] spielfeld = {
+            {' ', ' ', ' '},
+            {' ', ' ', ' '},
+            {' ', ' ', ' '}
+        };
+        
+    char aktSpieler = 'X';
+    boolean gewonnen = false;
+        
+    while (!gewonnen) {
+      zeichneFeld(spielfeld);
+      spielzug(spielfeld, aktSpieler);
+      gewonnen = pruefeGewinn(spielfeld, aktSpieler);
+            
+      if (gewonnen) {
+        zeichneFeld(spielfeld);
+        System.out.println("Spieler " + aktSpieler + " hat gewonnen!");
+      } else if (vollesFeld(spielfeld)) {
+        zeichneFeld(spielfeld);
+        System.out.println("Unentschieden!");
+        break;
+      }
+            
+      aktSpieler = (aktSpieler == 'X') ? 'O' : 'X';
+    }
+  }
+
+  private static void zeichneFeld(char[][] spielfeld) {
+    System.out.println("-------------");
+    for (int i = 0; i < 3; i++) {
+      System.out.print("| ");
+      for (int j = 0; j < 3; j++) {
+        System.out.print(spielfeld[i][j] + " | ");
+      }
+      System.out.println();
+      System.out.println("-------------");
+    }
+  }
+
+  private static void spielzug(char[][] spielfeld, char aktSpieler) {
+    try (Scanner scanner = new Scanner(System.in)) {
+      int reihe;
+      int zeile;
+          
+      do {
+        System.out.print("Spieler " + aktSpieler + ", gib die Zeile (1-3) ein: ");
+        reihe = scanner.nextInt() - 1;
+        System.out.print("Spieler " + aktSpieler + ", gib die Spalte (1-3) ein: ");
+        zeile = scanner.nextInt() - 1;
+      } while (reihe < 0 || reihe >= 3 || zeile < 0 || zeile >= 3 
+        || spielfeld[reihe][zeile] != ' ');
+
+      spielfeld[reihe][zeile] = aktSpieler;
+    }
+  }
+
+  private static boolean pruefeGewinn(char[][] spielfeld, char aktSpieler) {
+    for (int i = 0; i < 3; i++) {
+      if ((spielfeld[i][0] == aktSpieler && spielfeld[i][1] == aktSpieler 
+          && spielfeld[i][2] == aktSpieler) 
+          || (spielfeld[0][i] == aktSpieler && spielfeld[1][i] == aktSpieler 
+          && spielfeld[2][i] == aktSpieler)) {
+        return true;
+      }
+    }
+
+    if ((spielfeld[0][0] == aktSpieler && spielfeld[1][1] == aktSpieler 
+        && spielfeld[2][2] == aktSpieler) 
+        || (spielfeld[0][2] == aktSpieler && spielfeld[1][1] == aktSpieler 
+        && spielfeld[2][0] == aktSpieler)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private static boolean vollesFeld(char[][] board) {
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (board[i][j] == ' ') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+}
